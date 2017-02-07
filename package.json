@@ -29,6 +29,7 @@
     "koa-session": "^3.4.0",
     "koa-static": "^3.0.0",
     "koa-views": "^5.2.0",
-    "runkoa": "^1.5.9"
+    "runkoa": "^1.5.9",
+    "ws": "^2.0.2"
   }
 }
