@@ -25,7 +25,7 @@ app.keys=['blog20170101']
 app.env='development'
 app.use(logger())
 
-const router = require('./routes')
+const router = require('./routes').router
 
 app.on('error',function (err,ctx) {
     console.log('error occured:', err.stack)
@@ -45,7 +45,7 @@ app.use(mount('/static',require('koa-static')(__dirname+'/public')))
 
 app.use(views(__dirname+'/views',{map: {html: 'ejs'}}))
 app.use(convert(session(SESSION_CONFIG,app)))
-app.use(router)
+app.use(router.routes(), router.allowedMethods())
 
 app.listen(3000,function () {
     console.log('app started,http://localhost:3000,ctrl-c to terminate')

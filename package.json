@@ -31,5 +31,8 @@
     "koa-views": "^5.2.0",
     "runkoa": "^1.5.9",
     "ws": "^2.0.2"
+  },
+  "dependencies": {
+    "koa-router": "^7.0.1"
   }
 }
