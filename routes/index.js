@@ -6,7 +6,7 @@ const router = require('koa-router')()
 setInterval(function () {
     let date = new Date()
     console.log('current time',date)
-},5000)
+},1000*60)
 
 router.get('/',async (ctx)=>{
     await ctx.render('home')
