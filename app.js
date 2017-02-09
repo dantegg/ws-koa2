@@ -36,12 +36,18 @@ app.on('error',function (err,ctx) {
 })
 
 app.use(async (ctx,next)=>{
+    ctx.cookies.set('name', 'dantegg', {httpOnly:true});
     const start = new Date()
     await next()
     const ms = new Date() -start
     console.log(`${ctx.method} ${ctx.url} - ${ms}ms`)
 })
 
+
+app.use(async(ctx,next)=>{
+    console.log('cookie',ctx.cookies.get('name'))
+    await next()
+})
 
 app.use(bodyparser())
 app.use(json())
