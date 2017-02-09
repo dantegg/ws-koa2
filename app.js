@@ -12,6 +12,7 @@ const json = require('koa-json')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const router = require('./routes').router
+const WebSocketServer = ws.Server
 
 //websocket
 const ws = require('ws')
@@ -53,10 +54,27 @@ app.use(router.routes(), router.allowedMethods())
 
 
 
-app.listen(3000,function () {
+let server = app.listen(3000,function () {
     console.log('app started,http://localhost:3000,ctrl-c to terminate')
 })
 
 
+app.wss = createWebSocketServer(server,onConnect,onMessage,onClose)
+
+function createWebSocketServer() {
+    
+}
+
+function onConnect() {
+    
+}
+
+function onMessage() {
+    
+}
+
+function onClose() {
+    
+}
 
 module.exports = app
