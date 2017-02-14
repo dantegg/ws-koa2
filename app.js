@@ -12,10 +12,11 @@ const json = require('koa-json')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const router = require('./routes').router
-const WebSocketServer = ws.Server
+
 
 //websocket
 const ws = require('ws')
+const WebSocketServer = ws.Server
 
 const SESSION_CONFIG = {
     key: 'wskoa20170207',
@@ -37,7 +38,7 @@ app.on('error',function (err,ctx) {
 })
 
 app.use(async (ctx,next)=>{
-    ctx.cookies.set('name', 'dantegg', {httpOnly:true});
+    //ctx.cookies.set('name', 'dantegg', {httpOnly:true});
     const start = new Date()
     await next()
     const ms = new Date() -start
@@ -45,10 +46,10 @@ app.use(async (ctx,next)=>{
 })
 
 
-app.use(async(ctx,next)=>{
-    console.log('cookie',ctx.cookies.get('name'))
-    await next()
-})
+// app.use(async(ctx,next)=>{
+//     console.log('cookie',ctx.cookies.get('name'))
+//     await next()
+// })
 
 app.use(bodyparser())
 app.use(json())

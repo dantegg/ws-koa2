@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>login</title>
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap-theme.min.css">
+    <style>
+        body{
+            height:100%;
+            width:100%;
+            position: absolute;
+        }
+    </style>
+</head>
+<body>
+    <div style="top:40%;position: fixed;width: 100%;">
+        <div class="row">
+            <div class="col-xs-6 col-md-4 col-xs-offset-6 col-md-offset-4">
+            <form class="form-horizontal" method="POST" action="/api/login">
+                <div class="form-group">
+                    <!--<label for="nickname" class="col-sm-2 control-label">昵称</label>-->
+                    <!--<div class="col-sm-10">-->
+                        <input type="text" name="nickname" class="form-control" id="nickname" placeholder="填写昵称" required>
+                    <!--</div>-->
+                </div>
+                <div class="form-group">
+                    <!--<div class="col-sm-offset-2 col-sm-10">-->
+                        <button type="submit" class="btn btn-primary" style="width: 100%">登录</button>
+                    <!--</div>-->
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <script src="/static/jquery.min.js" charset="utf-8" ></script>
+    <script src="/static/bootstrap.min.js" charset="UTF-8"></script>
+    <!--<script>-->
+        <!--function go2home(){-->
+            <!--$.ajax({-->
+                <!--url:'/api/login',-->
+                <!--method:'post',-->
+                <!--success:function (res) {-->
+                    <!--console.log('res',res)-->
+                <!--}-->
+            <!--})-->
+        <!--}-->
+    <!--</script>-->
+</body>
+</html>
