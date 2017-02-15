@@ -45,7 +45,7 @@
 
         var chatdom = ''
         $(function () {
-            var ws = new WebSocket('ws://localhost:3000/ws/chat');
+            var ws = new WebSocket('ws://192.168.11.188:3000/ws/chat');
 
             ws.onmessage = function(event) {
                 var data = event.data;

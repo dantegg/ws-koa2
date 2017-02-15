@@ -81,7 +81,8 @@ function createWebSocketServer(server,onConnect,onMessage,onError) {
 
     wss.on('connection', function (ws) {
         let cookies = new Cookies(ws.upgradeReq)
-        console.log('cookie',cookies.get('nickname'))
+        //console.log('cookie',cookies)
+        console.log('cookie is',cookies.get('nickname'))
         let location = url.parse(ws.upgradeReq.url, true);
         console.log('[WebSocketServer] connection: ' + location.href);
         ws.on('message', onMessage);
@@ -120,7 +121,7 @@ function createMessage(type, user, data) {
 
 function onConnect() {
     let user = this.user;
-    //console.log('user',user)
+    console.log('user',user)
     let msg = createMessage('join', user, `${user} joined.`);
 
     this.wss.broadcast(msg);

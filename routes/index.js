@@ -17,7 +17,16 @@ router.get('/',async(ctx)=>{
 
 router.get('/home',async (ctx)=>{
     console.log('home session',ctx.session)
-    await ctx.render('home')
+    console.log('ctx',ctx.cookies.get('nickname'))
+    const cookieLogin = ctx.cookies.get('nickname')
+    console.log('cookie  !!!!',!!cookieLogin)
+    if(!cookieLogin) {
+        ctx.session = null
+        ctx.redirect('/login')
+    }else{
+        await ctx.render('home')
+    }
+
 })
 
 router.get('/login',async (ctx)=>{
