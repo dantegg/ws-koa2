@@ -2,6 +2,7 @@
  * Created by dantegg on 2017/2/7.
  */
 const fs = require('fs')
+const url = require('url');
 const path = require('path')
 const Koa = require('koa')
 const session = require('koa-session')
@@ -12,7 +13,7 @@ const json = require('koa-json')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const router = require('./routes').router
-
+const Cookies = require('cookies');
 
 //websocket
 const ws = require('ws')
@@ -66,22 +67,84 @@ let server = app.listen(3000,function () {
 })
 
 
-app.wss = createWebSocketServer(server,onConnect,onMessage,onClose)
+function createWebSocketServer(server,onConnect,onMessage,onError) {
+    let wss = new WebSocketServer({
+        server: server
+    });
 
-function createWebSocketServer() {
-    
+    wss.broadcast = function broadcast(data) {
+        console.log('data',data)
+        wss.clients.forEach(function each(client) {
+            client.send(data);
+        });
+    };
+
+    wss.on('connection', function (ws) {
+        let cookies = new Cookies(ws.upgradeReq)
+        console.log('cookie',cookies.get('nickname'))
+        let location = url.parse(ws.upgradeReq.url, true);
+        console.log('[WebSocketServer] connection: ' + location.href);
+        ws.on('message', onMessage);
+        ws.on('close', onClose);
+        ws.on('error', onError);
+        if (location.pathname !== '/ws/chat') {
+            // close ws:
+            console.log('invalid url')
+            ws.close(4000, 'Invalid URL');
+        }
+        // check user:
+        let user = cookies.get('nickname')
+        if (!user) {
+            console.log('invalid user')
+            ws.close(4001, 'Invalid user');
+        }
+        ws.user = user
+        ws.wss = wss;
+        onConnect.apply(ws);
+    });
+    console.log('WebSocketServer was attached.');
+    return wss;
+}
+
+var messageIndex=0
+
+function createMessage(type, user, data) {
+    messageIndex ++;
+    return JSON.stringify({
+        id: messageIndex,
+        type: type,
+        user: user,
+        data: data
+    });
 }
 
 function onConnect() {
-    
+    let user = this.user;
+    console.log('user',user)
+    let msg = createMessage('join', user, `${user} joined.`);
+
+    this.wss.broadcast(msg);
+    // build user list:
+    let users = this.wss.clients.map(function (client) {
+        return client.user;
+    });
+    this.send(createMessage('list', user, users));
 }
 
 function onMessage() {
-    
+    console.log(message);
+    if (message && message.trim()) {
+        let msg = createMessage('chat', this.user, message.trim());
+        this.wss.broadcast(msg);
+    }
 }
 
 function onClose() {
-    
+    let user = this.user;
+    let msg = createMessage('left', user, `${user.name} is left.`);
+    this.wss.broadcast(msg);
 }
+
+app.wss = createWebSocketServer(server,onConnect,onMessage,onClose)
 
 module.exports = app
