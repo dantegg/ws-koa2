@@ -23,28 +23,75 @@
         <div class="row" style="height: 70%;width:100%">
             <div class="col-md-8">
                 <h1>开始聒噪吧！</h1>
-                <div style="min-height:300px"></div>
+                <div style="min-height:300px" id="chatarea"></div>
             </div>
             <div class="col-md-4" style="border-left:1px solid #dedede;height:100%">
                 <div>小伙伴们</div>
+                <div id="userList"></div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-7">
-                <textarea rows="10" style="width:100%"></textarea>
-                <div><button class="btn btn-primary">发送</button></div>
+                <textarea rows="10" style="width:100%" id="txt"></textarea>
+                <div><button class="btn btn-primary" id="button">发送</button></div>
             </div>
         </div>
     </div>
     <script src="/static/jquery.min.js" charset="utf-8" ></script>
     <script src="/static/bootstrap.min.js" charset="UTF-8"></script>
     <script>
+
+        var userList = []
+
+        var chatdom = ''
         $(function () {
             var ws = new WebSocket('ws://localhost:3000/ws/chat');
 
             ws.onmessage = function(event) {
                 var data = event.data;
                 console.log(data);
+                var msg = JSON.parse(data)
+                if(msg.type==='list'){
+                    console.log('msg',msg)
+                    var listdom = ''
+                    userList=msg.data
+                    for(var i in userList){
+                        listdom += '<div>'+userList[i]+'</div>'
+                    }
+                    $('#userList').html(listdom)
+
+                }
+                if(msg.type === 'join'){
+                    console.log('userlist join',userList)
+                    userList.push(msg.user)
+                    var listdomJoin =''
+                    for(var z in userList){
+                        console.log('user',userList[z])
+                        listdomJoin += '<div>'+userList[z]+'</div>'
+                    }
+                    $('#userList').html(listdomJoin)
+                }
+
+                if(msg.type === 'left'){
+                    //console.log('userlist join',userList)
+                    for(var l in userList){
+                        if(userList[l]===msg.user){
+                            userList.splice(l,1)
+                        }
+                    }
+                    var listdomLeft =''
+                    for(var l in userList){
+                        listdomLeft += '<div>'+userList[l]+'</div>'
+                    }
+                    $('#userList').html(listdomLeft)
+                }
+
+                if(msg.type === 'chat'){
+
+                    chatdom +='<div>'+msg.user+'说'+msg.data+'</div>'
+                    $('#chatarea').html(chatdom)
+                }
+
 //                var msg = JSON.parse(data);
 //                if (msg.type === 'list') {
 //                    vmUserList.users = msg.data;
@@ -70,6 +117,12 @@
             ws.onerror = function (code, msg) {
                 console.log('[ERROR] ' + code + ': ' + msg);
             };
+
+            $("#button").click(function () {
+                    var msg = $('#txt').val()
+                console.log('msg',msg)
+                    ws.send(msg)
+            })
         })
     </script>
 </body>

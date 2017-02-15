@@ -133,7 +133,7 @@ function onConnect() {
     this.send(createMessage('list', user, users));
 }
 
-function onMessage() {
+function onMessage(message) {
     console.log(message);
     if (message && message.trim()) {
         let msg = createMessage('chat', this.user, message.trim());
@@ -143,7 +143,7 @@ function onMessage() {
 
 function onClose() {
     let user = this.user;
-    let msg = createMessage('left', user, `${user.name} is left.`);
+    let msg = createMessage('left', user, `${user} is left.`);
     this.wss.broadcast(msg);
 }
 
