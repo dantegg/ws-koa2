@@ -120,13 +120,15 @@ function createMessage(type, user, data) {
 
 function onConnect() {
     let user = this.user;
-    console.log('user',user)
+    //console.log('user',user)
     let msg = createMessage('join', user, `${user} joined.`);
 
     this.wss.broadcast(msg);
     // build user list:
-    let users = this.wss.clients.map(function (client) {
-        return client.user;
+    //console.log('users',this.wss.clients)
+    let users = []
+    this.wss.clients.forEach(function (client) {
+        users.push(client.user)
     });
     this.send(createMessage('list', user, users));
 }
