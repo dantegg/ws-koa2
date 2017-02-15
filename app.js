@@ -94,7 +94,8 @@ function createWebSocketServer(server,onConnect,onMessage,onError) {
             ws.close(4000, 'Invalid URL');
         }
         // check user:
-        let user = cookies.get('nickname')
+        let nickname = cookies.get('nickname')
+        let user = Buffer.from(nickname,'base64').toString()
         if (!user) {
             console.log('invalid user')
             ws.close(4001, 'Invalid user');

@@ -2,7 +2,6 @@
  * Created by dantegg on 2017/2/7.
  */
 const router = require('koa-router')()
-const Cookies = require('cookies');
 
 
 setInterval(function () {
@@ -16,10 +15,10 @@ router.get('/',async(ctx)=>{
 })
 
 router.get('/home',async (ctx)=>{
-    console.log('home session',ctx.session)
-    console.log('ctx',ctx.cookies.get('nickname'))
+    //console.log('home session',ctx.session)
+    //console.log('ctx',ctx.cookies.get('nickname'))
     const cookieLogin = ctx.cookies.get('nickname')
-    console.log('cookie  !!!!',!!cookieLogin)
+    //console.log('cookie  !!!!',!!cookieLogin)
     if(!cookieLogin) {
         ctx.session = null
         ctx.redirect('/login')
@@ -36,7 +35,9 @@ router.get('/login',async (ctx)=>{
 router.post('/api/login',async(ctx)=>{
     console.log('body',ctx.request.body.nickname)
     ctx.session.nickname= ctx.request.body.nickname
-    ctx.cookies.set('nickname', ctx.request.body.nickname, {httpOnly:true});
+    let zz = ctx.request.body.nickname
+    let nickname = Buffer.from(zz).toString('base64')
+    ctx.cookies.set('nickname', nickname, {httpOnly:true});
     ctx.redirect('/home')
 })
 
